@@ -14,7 +14,7 @@ void set_pixel(int x, int y) {
 	pixels[index * 3 + 2] = 0;
 }
 
-void Midpoint_init(int x1, int y1, int x2, int y2) {
+void Bresenhsm_init(int x1, int y1, int x2, int y2) {
 	int dx = x2 - x1;
 	int dy = y2 - y1;
 	float k = dy*1.0/ dx;
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 	glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
 	glutInitWindowPosition(300, 100);//
 	glutInitWindowSize(width, height);
-	glutCreateWindow("DDL»­Ïß");
+	glutCreateWindow("Bresenhsm»­Ïß");
 
 
 	pixels = new unsigned char[width*height * 3];
