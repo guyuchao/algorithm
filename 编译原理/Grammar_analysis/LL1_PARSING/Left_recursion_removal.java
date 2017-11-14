@@ -44,7 +44,7 @@ public class Left_recursion_removal {
 		TreeSet<String> tmp_set=new TreeSet<String>();
 		for(String s:wait_for_replace_set) {
 			int index=s.indexOf(replace_non_t);
-			if(index!=-1) {
+			if(index==0) {
 				for(String i:replace_set) {
 					tmp_set.add((s.substring(0,index)+i+s.substring(index+replace_non_t.length())));
 				}
@@ -132,16 +132,18 @@ public class Left_recursion_removal {
 		//this.transvers();
 	}
 	
-	/*
+	
 	public static void main(String[] args) {
 		// TODO 自动生成的方法存根
 		
-		String[] str=new String[3];
-		str[0]="stmt_seq->stmt ; stmt_seq|stmt";
-		str[1]="assign_stmt->identifier = exp";
-		str[2]="call_stmt->identifier ( exp_list )";
+		String[] str=new String[5];
+		str[0]="exp->exp addop term | term";
+		str[1]="addop->+ | -";
+		str[2]="term->term mulop factor|factor";
+		str[3]="mulop->*";
+		str[4]="factor->( exp ) | number";
 		//str[2]="C->Ac|c";
 		new Left_recursion_removal(str);
-	}*/
+	}
 
 }

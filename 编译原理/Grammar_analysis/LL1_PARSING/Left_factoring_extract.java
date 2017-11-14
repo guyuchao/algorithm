@@ -177,9 +177,6 @@ public class Left_factoring_extract {
 		/*str[0]="assign_stmt->identifier = exp";
 		str[1]="call_stmt->identifier ( exp_list )";
 		str[2]="statement->assign_stmt|call_stmt|other";*/
-		str[0]="S->Q c|c";
-		str[1]="Q->R b|b";
-		str[2]="R->S a|a";
 		//str[1]="call_stmt->identifier ( exp_list )";
 		//str[2]="statement->assign_stmt|call_stmt|other";
 		//new Left_recursion_removal(str);
