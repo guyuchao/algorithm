@@ -7,7 +7,7 @@
 #include"POLYGEN.h"
 using namespace std;
 struct ET_NODE {//新边表节点
-	int x_min;
+	double x_min;
 	double delta_x;
 	int y_max;
 	ET_NODE(int xmin, float d, int ymax) {

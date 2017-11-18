@@ -2,6 +2,7 @@
 #include<iostream>
 #include"POLYGEN.h"
 #include"AETNET.h"
+#include<queue>
 using namespace std;
 #include<map>
 #include<set>
@@ -27,13 +28,22 @@ void draw_pixel(int x, int y) {
 void draw_line(int x1, int x2, int y) {
 	for (int i = x1; i <= x2; i++) {
 		draw_pixel(i, y);
+		cout << "(" << i << "," << y << ")";
 	}
 }
-
+void draw_line(queue<int> draw_index,int y) {
+	while (!draw_index.empty()) {
+		int left = draw_index.front();
+		draw_index.pop();
+		int right = draw_index.front();
+		draw_index.pop();
+		draw_line(left, right, y);
+		cout << endl;
+	}
+}
 void polyfill(polygon p) {
 	NET net(p);
 	AET aet;
-
 	int miny = p.min_y;
 	int maxy = p.max_y;
 
@@ -43,21 +53,22 @@ void polyfill(polygon p) {
 				aet.insert(j);
 			}
 		}
+
+		for (auto j : aet.AET_EDGE_T) {
+			cout << j.x_min << "," <<j.y_max << "  ";
+		}
+		cout << endl;
 		int tmp_x_left = 0;
 		int tmp_x_right = 0;
+
+		queue<int> draw_index;
 		for (auto j : aet.AET_EDGE_T) {
-			if (tmp_x_left == 0) {
-				tmp_x_left = j.x_min;
-			}
-			else if (tmp_x_right == 0) {
-				tmp_x_right = j.x_min;
-				draw_line(tmp_x_left, tmp_x_right, i);
-				tmp_x_left = tmp_x_right = 0;
-			}
+			draw_index.push(int(j.x_min+0.5));
 		}
+		draw_line(draw_index,i);
 		AET tmp_aet;
 		for (auto j : aet.AET_EDGE_T) {
-			if (j.y_max > i) {
+			if (j.y_max-1 > i) {
 				ET_NODE tmp_node = j;
 				tmp_node.x_min += tmp_node.delta_x;
 				tmp_aet.insert(tmp_node);
