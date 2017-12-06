@@ -1,10 +1,8 @@
 #pragma once
 #ifndef DDL_Line_H_
 #define DDL_Line_H_
-
 #define WIDTH 500
 #define HEIGHT 500
-
 #include<cmath>
 struct point {
 	int x;
@@ -15,7 +13,6 @@ struct point {
 		y = b;
 	}
 };
-
 class DDL {
 private:
 	unsigned char* pixels;
@@ -65,7 +62,6 @@ private:
 			}
 		}
 	}
-
 public:
 	DDL(unsigned char* &p) {
 		pixels = p;
@@ -74,7 +70,4 @@ public:
 		DDL_init(x.x, x.y, y.x, y.y);
 	}
 };
-
-
-
 #endif // !DDL_Line_H_

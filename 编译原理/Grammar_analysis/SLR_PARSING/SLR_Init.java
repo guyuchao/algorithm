@@ -4,20 +4,20 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.DelayQueue;
 
-public class LR_Init {
+public class SLR_Init {
 	private HashMap<Integer,String> grammar=new HashMap<Integer,String>();
 	private HashMap<String,Integer> find_core=new HashMap<String,Integer>();
 	private HashSet<String> non_terminal_set=new HashSet<String>();
 	private HashSet<String> terminal_set=new HashSet<String>();
 	private Integer num_of_production=0;
+	private Map<String,HashSet<String>> FOLLOW;
 	public int getState_num() {
 		return state_num;
 	}
-
-
 	private int state_num=0;
 	private String grammar_begin="S'";
 	private DFA_Struct DFA_LR=new DFA_Struct();
@@ -38,12 +38,16 @@ public class LR_Init {
 		return grammar;
 	}
 
-	public LR_Init(String[] str,String gra_begin) {
+	public SLR_Init(String[] str,String gra_begin) {
 		init(str,gra_begin);
+		FOLLOW=new First_Follow_Gen(grammar,non_terminal_set).getFOLLOW();
 		createDFA();
-		System.out.println(DFA_LR.index_of_node.toString());
 	}
 	
+	public Map<String, HashSet<String>> getFOLLOW() {
+		return FOLLOW;
+	}
+
 	private ArrayList<String> find_begin_grammar(String begin) {
 		ArrayList<String> tmp_str=new ArrayList<String>();
 		for(Integer i:grammar.keySet()) {
@@ -60,7 +64,6 @@ public class LR_Init {
 		
 		if(!non_terminal_set.contains(point_after)) {
 			arr.add(core_content);
-			terminal_set.add(point_after);
 		}
 		else {
 			arr.add(core_content);
@@ -109,25 +112,36 @@ public class LR_Init {
 			}
 			//Ìí¼Ó¾ä×Ó
 			DFA_content tmp_dfa_content=DFA_LR.index_of_node.get(state);
-			String core_content=tmp_dfa_content.getCore();
-			if(core_content.trim().charAt(core_content.length()-1)=='.')continue;
-			ArrayList<String> ret_str_arr=find_closure(core_content,new HashSet<String>());
+			ArrayList<String> core_content=tmp_dfa_content.getCore();
+			ArrayList<String> ret_str_arr=new ArrayList<String>();
+			for(String each:core_content) {
+				if(each.trim().charAt(each.length()-1)=='.')continue;
+				ret_str_arr.addAll(find_closure(each,new HashSet<String>()));
+			}
 			for(String str:ret_str_arr) {
-				if(!str.equals(core_content)) {
+				if(!core_content.contains(str)) {
 					tmp_dfa_content.addContent(str);
 				}
 			}
-			
+			HashMap<String,Integer> via_str_to_state=new HashMap<String,Integer>();
 			for(String str:tmp_dfa_content.getContent()) {
+				if(str.trim().charAt(str.length()-1)=='.')continue;
 				String tmp_str=change_point_location(str);
+				String via=str.split("->")[1].split("\\.")[1].trim().split(" ")[0];
 				if(find_core.containsKey(tmp_str)) {
-					DFA_LR.put_map_node(state, find_core.get(tmp_str), str.split("->")[1].split("\\.")[1].trim().split(" ")[0]);
+					DFA_LR.put_map_node(state, find_core.get(tmp_str), via);
 				}
 				else {
-					DFA_LR.put_map_node(state, ++state_num, str.split("->")[1].split("\\.")[1].trim().split(" ")[0]);
-					DFA_LR.put_map_content(state_num,change_point_location(str));
-					dfs_queue.add(state_num);
-					find_core.put(tmp_str, state_num);
+					if(!via_str_to_state.containsKey(via)) {
+						DFA_LR.put_map_node(state, ++state_num, via);
+						via_str_to_state.put(via, state_num);
+						DFA_LR.put_map_core(state_num,tmp_str);
+						dfs_queue.add(state_num);
+						find_core.put(tmp_str, state_num);
+					}
+					else {
+						DFA_LR.put_map_core(via_str_to_state.get(via),tmp_str);
+					}
 				}
 			}
 		}
@@ -141,11 +155,18 @@ public class LR_Init {
 			addGrammar(begin,production);
 			non_terminal_set.add(begin);
 		}
+		for(Integer key:grammar.keySet()) {
+			String[] product_ele=grammar.get(key).split("->")[1].split(" ");
+			for(int j=0;j<product_ele.length;j++) {
+				if(!non_terminal_set.contains(product_ele[j])) {
+					terminal_set.add(product_ele[j]);
+				}
+			}
+		}
 		non_terminal_set.add(grammar_begin);
 		grammar.put(0, grammar_begin+"->"+gra_tmp_begin);
-		DFA_LR.put_map_content(0, grammar_begin+"->."+gra_tmp_begin);
+		DFA_LR.put_map_core(0, grammar_begin+"->."+gra_tmp_begin);
 		find_core.put(grammar_begin+"->."+gra_tmp_begin, 0);
-		//System.out.println(DFA_LR);
 	}
 	
 	private void addGrammar(String begin,String[] production) {
@@ -160,6 +181,6 @@ public class LR_Init {
 		str[0]="E->E + T|T";
 		str[1]="T->T * F|F";
 		str[2]="F->( E )|id";
-		new LR_Init(str,"E");
+		new SLR_Init(str,"E");
 	}
 }

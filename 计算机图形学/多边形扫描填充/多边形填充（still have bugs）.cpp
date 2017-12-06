@@ -12,9 +12,6 @@ using namespace std;
 
 /*global*/
 unsigned char* pixels;
-
-
-
 void draw_pixel(int x, int y) {
 	int pianyi = 200;
 	x = x + pianyi;
@@ -42,25 +39,13 @@ void draw_line(queue<int> draw_index,int y) {
 	}
 }
 void polyfill(polygon p) {
-	NET net(p);
-	AET aet;
-	int miny = p.min_y;
-	int maxy = p.max_y;
-
+	NET net(p);AET aet;
+	int miny = p.min_y,maxy = p.max_y;
 	for (int i = miny; i <= maxy; i++) {
 		if (net.New_Edge_T.count(i) != 0) {
-			for (auto j : net.New_Edge_T[i]) {
-				aet.insert(j);
-			}
+			for (auto j : net.New_Edge_T[i]) {aet.insert(j);}
 		}
-
-		for (auto j : aet.AET_EDGE_T) {
-			cout << j.x_min << "," <<j.y_max << "  ";
-		}
-		cout << endl;
-		int tmp_x_left = 0;
-		int tmp_x_right = 0;
-
+		int tmp_x_left = 0,tmp_x_right = 0;
 		queue<int> draw_index;
 		for (auto j : aet.AET_EDGE_T) {
 			draw_index.push(int(j.x_min+0.5));

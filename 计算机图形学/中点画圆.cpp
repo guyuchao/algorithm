@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 
 	pixels = new unsigned char[width*height * 3];
 	int R;
-	cout << "请输入两个点坐标：  ";
+	cout << "请输入半径：  ";
 	cin >> R;
 	Midcircle_init(R);
 	glutDisplayFunc(&mydraw);

@@ -13,17 +13,14 @@ public class DFA_Struct {
 		}
 		dfa_map.get(begin).add(new DFA_NODE(end,dis));
 	}
-	public void put_map_content(Integer index,String con) {
+	public void put_map_core(Integer index,String con) {
 		if(!index_of_node.containsKey(index)) {
 			index_of_node.put(index, new DFA_content());
 		}
-		//往index里面添加内容
-		if(index_of_node.get(index).getCore()==null) {
-			index_of_node.get(index).setCore(con);
-		}
-		else {
-			index_of_node.get(index).addContent(con);
-		}
+		//往index里面添加core
+
+		index_of_node.get(index).addCore(con);
+		
 	}
 	public String toString() {
 		return index_of_node.toString()+"\n"+dfa_map.toString();
@@ -31,24 +28,28 @@ public class DFA_Struct {
 	}
 }
 class DFA_content{
-	private String core=null;
-	public String getCore() {
+	private ArrayList<String> core=new ArrayList<String>();
+	public ArrayList<String> getCore() {
 		return core;
 	}
-	public void setCore(String core) {
-		this.core = core;
+	public void addCore(String core) {
+		this.core.add(core);
 	}
 	private ArrayList<String> content=new ArrayList<String>();
 	public ArrayList<String> getContent() {
-		ArrayList<String> ret=(ArrayList<String>) content.clone();
-		ret.add(core);
+		ArrayList<String> ret=new ArrayList<String>();
+		ret.addAll(core);
+		ret.addAll(content);
 		return ret;
 	}
 	public void addContent(String str) {
 		content.add(str);
 	}
 	public String toString() {
-		return "core:"+core+"   content:"+content.toString();
+		return "core:"+core.toString()+"   content:"+content.toString();
+	}
+	public Integer coreSize() {
+		return core.size();
 	}
 }
 

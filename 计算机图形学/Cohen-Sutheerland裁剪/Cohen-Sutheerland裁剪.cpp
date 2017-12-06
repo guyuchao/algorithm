@@ -104,10 +104,7 @@ int main(int argc, char *argv[])
 	ddl.DDL_drawLine(point(400, 100), point(400, 400));
 	ddl.DDL_drawLine(point(100, 400), point(400, 400));
 	ddl.DDL_drawLine(point(400, 100), point(100, 100));//±ß½ç
-
-
-	
-	drawLine(point(70,60), point(480,300));
+	drawLine(point(70,60), point(480,420));
 	
 	glutDisplayFunc(&mydraw);
 

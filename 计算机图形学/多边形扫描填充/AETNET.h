@@ -20,8 +20,6 @@ bool operator<(const ET_NODE x, const ET_NODE y) {
 	if (x.x_min != y.x_min)return x.x_min < y.x_min;
 	else return x.delta_x < y.delta_x;
 }
-
-
 class NET {
 public:
 	std::map<int, std::set<ET_NODE>> New_Edge_T;

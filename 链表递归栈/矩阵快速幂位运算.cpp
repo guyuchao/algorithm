@@ -29,15 +29,6 @@ public:
 	}
 };
 
-matrix quick_pow(matrix a,int times) {
-	if (times == 1)return a;
-	if (times % 2 == 0) {
-		return quick_pow(a,times/2)*quick_pow(a, times / 2);
-	}
-	else {
-		return quick_pow(a, (times-1) / 2)*quick_pow(a, (times-1) / 2)*a;
-	}
-}
 
 int main() {
 	matrix x(0, 1, 1, 1);
@@ -52,8 +43,7 @@ int main() {
 		x = x*x;
 		n=n >> 1;
 	}
-	//b.print();
-	//matrix b = quick_pow(x, n-2);
+	
 	cout << b.x21*a1 + b.x22*a2;
 
 
